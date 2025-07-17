@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  clipsai:
+    build: .
+    container_name: clipsai-web
+    ports:
+      - "5555:5555"
+    volumes:
+      - ./uploads:/app/uploads
+      - ./downloads:/app/downloads
+      - ./temp:/app/temp
+    environment:
+      - PYTHONUNBUFFERED=1
+      - PORT=5555
+      - UPLOAD_DIR=/app/uploads
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5555/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
